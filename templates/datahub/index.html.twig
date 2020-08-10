@@ -146,7 +146,9 @@
 
         console.log("Test");
         $('#form-upload').hide();
+        $('#image-upload').hide();
         $('#txtArea').hide();
+        $('#imageFooter').hide();
 
         var flag = 0;
 
@@ -155,13 +157,29 @@
             {
                 flag = 2;
                 $('#txtArea').show();
+                $('#btnFooter').show();
                 $('#form-upload').hide();
+                $('#image-upload').hide();
+                $('#imageFooter').hide();
+                $('#btnFooter').prepend('</div>');
+
+            }
+            else if ($("#dataTypeTxt").val() == 'img')
+            {
+                $('#txtArea').hide();
+                $('#btnFooter').hide();
+                $('#image-upload').show(); 
+                $('#form-upload').hide();
+                $('#imageFooter').show();
 
             }
             else
             {
                 $('#txtArea').hide();
-                $('#form-upload').show(); 
+                $('#btnFooter').show();
+                $('#image-upload').hide(); 
+                $('#form-upload').show();
+                $('#imageFooter').hide();
             }
         });
 
