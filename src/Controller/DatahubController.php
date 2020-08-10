@@ -14,7 +14,7 @@ use App\Entity\Datahub;
 use App\Repository\UploadRepository;
 use App\Entity\Upload;
 use Symfony\Component\HttpFoundation\Session\Session;
-
+use App\Service\ImageUploader;
 
 
 /**
@@ -63,7 +63,9 @@ class DatahubController extends AbstractController
         $uploadId = $request->query->get('uniqueId');
         $statusBatch = $request->query->get('statusBatch');
         $type = $request->query->get('type');
+        $dataType = $request->query->get('dataType');
         $totalData = $request->query->get('totalData');
+        // die(print($type));
 
 
         for($x=0;$x<count($upload);$x++){
@@ -72,7 +74,7 @@ class DatahubController extends AbstractController
             for($y=0;$y<$lArray;$y++){
                 array_push($cArray, "");
             }
-            $datahubRepository->saveDatahub($cArray,$type,$uploadId);
+            $datahubRepository->saveDatahub($cArray, $type, $dataType, $uploadId);
         }
 
         $resultStatus = true;
@@ -82,5 +84,50 @@ class DatahubController extends AbstractController
         }
 
         return new JsonResponse(array('message' => $resultStatus), 200);
+    }
+
+    /**
+     * @Route("/uploadImg", name="datahub_image")
+     */
+    public function uploadImgAction(Request $request, ImageUploader $imageUploader, string $uploadDir, UploadRepository $uploadRepository, DatahubRepository $datahubRepository)
+    {
+        $session = new Session();
+        $file = $request->files->get('image');
+
+        if (empty($file))
+        {
+            return new Response("No file specified",
+               Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
+        }
+
+        $imageFile = $file->getClientOriginalName();
+        $imageUploader->upload($uploadDir, $file, $imageFile);  
+        $upload = array(
+            array($imageFile)
+        );
+        $uploadId = rand(100000, 1000000);
+        $statusBatch = 1;
+        $totalData = 1;
+
+        for ($x=0;$x<count($upload);$x++)
+        {
+            $lArray = 10-count($upload[$x]);
+            $cArray = $upload[$x];
+            for($y=0;$y<$lArray;$y++)
+            {
+                array_push($cArray, "");
+            }
+            $datahubRepository->saveDatahub($cArray, 'field', 'image', $uploadId);
+
+        }
+            
+        $resultStatus = true;
+        if ($statusBatch == 1)
+        {
+            $uploadRepository->saveUpload($totalData, $uploadId, $session->get('userId'));
+            $resultStatus = false;
+        }
+
+        return $this->redirectToRoute('datahub_index');
     }
 }

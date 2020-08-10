@@ -48,7 +48,7 @@ class DatahubRepository extends ServiceEntityRepository
     }
     */
 
-    public function saveDatahub($value, $type, $uploadId)
+    public function saveDatahub($value, $type, $dataType, $uploadId)
     {
         $datahub =  new Datahub();
         $em = $this->getEntityManager();
@@ -64,6 +64,7 @@ class DatahubRepository extends ServiceEntityRepository
         $datahub->setColumn9($value[8]);
         $datahub->setColumn10($value[9]);
         $datahub->setType($type);
+        $datahub->setDataType($dataType);
         $datahub->setUploadId($uploadId);
 
         $em->persist($datahub);
