@@ -65,6 +65,11 @@ class Datahub
     /**
      * @ORM\Column(type="string", length=255)
      */
+    private $dataType;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $uploadId;
 
     /**
@@ -186,6 +191,18 @@ class Datahub
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getDataType(): ?string
+    {
+        return $this->dataType;
+    }
+
+    public function setDataType(string $dataType): self
+    {
+        $this->dataType = $dataType;
 
         return $this;
     }

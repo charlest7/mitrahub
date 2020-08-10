@@ -63,7 +63,9 @@ class DatahubController extends AbstractController
         $uploadId = $request->query->get('uniqueId');
         $statusBatch = $request->query->get('statusBatch');
         $type = $request->query->get('type');
+        $dataType = $request->query->get('dataType');
         $totalData = $request->query->get('totalData');
+        // die(print($type));
 
 
         for($x=0;$x<count($upload);$x++){
@@ -72,7 +74,7 @@ class DatahubController extends AbstractController
             for($y=0;$y<$lArray;$y++){
                 array_push($cArray, "");
             }
-            $datahubRepository->saveDatahub($cArray,$type,$uploadId);
+            $datahubRepository->saveDatahub($cArray, $type, $dataType, $uploadId);
         }
 
         $resultStatus = true;

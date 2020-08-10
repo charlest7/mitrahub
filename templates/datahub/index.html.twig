@@ -303,7 +303,7 @@ function readDataProcessing(){
         if(moduloBatch > 0){
         totalBatch++;
         }
-        saveUploadData(objectHeaderData, uniqueId, totalBatch, 0, "header", objectData.length);
+        saveUploadData(objectHeaderData, uniqueId, totalBatch, 0, "xls", "header", objectData.length);
 
         for(var x=0;x<objectData.length;x++){
             var currentValue = x+1; 
@@ -314,11 +314,11 @@ function readDataProcessing(){
                 dataPush.push(objectData[x]);
                 if(objectData.length == currentValue){
                     var statusBatch = 1;
-                    saveUploadData(dataPush, uniqueId, totalBatch, statusBatch, "field", objectData.length);
+                    saveUploadData(dataPush, uniqueId, totalBatch, statusBatch, "", "field", objectData.length);
 
                 }else{
                     var statusBatch = 0;
-                    saveUploadData(dataPush, uniqueId, totalBatch, statusBatch,"field", objectData.length);
+                    saveUploadData(dataPush, uniqueId, totalBatch, statusBatch, "", "field", objectData.length);
 
                 }
             //console.log("detail data "+JSON.stringify(dataPush));
@@ -337,19 +337,19 @@ function readDataProcessing(){
         var n = Math.floor(Math.random() * 11);
         var uniqueId = Math.floor(Math.random() * 1000000);
 
-        saveUploadData(array2, uniqueId, 1, 1, "txt", 1);
+        saveUploadData(array2, uniqueId, 1, 1, "txt", "field", 1);
 
     }
    
 }
 
-function saveUploadData(upload, uniqueId, totalBatch, statusBatch, type, totalData ){
+function saveUploadData(upload, uniqueId, totalBatch, statusBatch, dataType, type, totalData ){
     $.ajax({
         url: "{{ path('datahub_upload') }}",
         async: true,
         type: "GET",
         dataType: "json",
-        data: { "upload":upload, "uniqueId":uniqueId, "statusBatch":statusBatch, "type":type, "totalData":totalData},	
+        data: { "upload":upload, "uniqueId":uniqueId, "statusBatch":statusBatch, "type":type, "dataType":dataType, "totalData":totalData},	
         contentType: "application/json"               
     }).done(function (data) {
         console.log("data "+data.message);
