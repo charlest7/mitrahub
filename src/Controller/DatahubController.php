@@ -46,6 +46,26 @@ class DatahubController extends AbstractController
         $headers = $datahubRepository->findBy(['uploadId' => $uploadId, 'type' => 'header']);
         $datahubs = $datahubRepository->findBy(['uploadId' => $uploadId, 'type' => 'field']);
 
+        foreach ($datahubs as $datahub)
+        {
+            $dataType = $datahub->getDataType();
+            $imageName = $datahub->getColumn1();
+        }
+        
+        if ($datahub->getDataType() == 'image')
+        {
+            $imageName = $datahub->getColumn1();
+            $imageUrl = $request->getSchemeAndHttpHost() .'/assets/images/' . $imageName;
+            $datahub->setColumn1('<img src="' . $imageUrl . '">');
+            $datahubs = [];
+            array_push($datahubs, $datahub);
+            
+        }
+        else
+        {
+            $datahubs = $datahubRepository->findBy(['uploadId' => $uploadId, 'type' => 'field']);
+        }
+
         return $this->render('datahub/upload.html.twig', [
             'controller_name' => 'DatahubController',
             'datahubs' => $datahubs,
