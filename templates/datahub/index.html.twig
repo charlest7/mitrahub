@@ -183,6 +183,21 @@
             }
         });
 
+        var form = document.getElementById('image-upload');
+        form.onsubmit = function() {
+            var fileInput = document.getElementById('import-audiences');
+            var files = fileInput.files[0];
+            var formData = new FormData();
+            formData.append('files', files);
+
+            var xhr = new XMLHttpRequest();
+            // Add any event handlers here...
+            xhr.open('POST', form.getAttribute('action'), true);
+            xhr.send(formData);
+
+            return false; // To avoid actual submission of the form
+        }
+
         $("#import-audience").on("change", function () {
             $("#upload-id").css("display","none");
             var dataType = $("#dataTypeTxt").val();

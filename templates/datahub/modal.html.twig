@@ -34,13 +34,10 @@
                         <div id="result"></div>
                     </div>  
                 </div>
-                <form method="POST" enctype="multipart/form-data" action="{{ path('datahub_image')}}" id="image-upload">
+                <form enctype="multipart/form-data" action="uploadImg" id="image-upload">
                     <div class="form-group row">    
-                        <div class="col-sm-12" id="imageExcel">
+                        <div class="col-sm-12">
                             <input type="file" id="import-audiences" name="image" accept="image/*"/>
-                            <div id="result"></div>
-                            <input type="text" class="form-control" id="b64" maxlength="400" hidden/>
-                            <img id="img" height="150" hidden>
                         </div>  
                     </div>
                 </div>

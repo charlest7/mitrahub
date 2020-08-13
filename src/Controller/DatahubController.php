@@ -112,7 +112,7 @@ class DatahubController extends AbstractController
     public function uploadImgAction(Request $request, ImageUploader $imageUploader, string $uploadDir, UploadRepository $uploadRepository, DatahubRepository $datahubRepository)
     {
         $session = new Session();
-        $file = $request->files->get('image');
+        $file = $request->files->get('files');
 
         if (empty($file))
         {
