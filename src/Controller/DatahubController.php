@@ -15,8 +15,9 @@ use App\Repository\UploadRepository;
 use App\Entity\Upload;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Service\ImageUploader;
+use Aws\S3\S3Client;
 
-
+// require 'vendor/autoload.php';
 /**
 * @Route("/datahub")
 */
@@ -113,17 +114,38 @@ class DatahubController extends AbstractController
     {
         $session = new Session();
         $file = $request->files->get('files');
-
+        
         if (empty($file))
         {
             return new Response("No file specified",
-               Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
+            Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
         }
+        $extension = explode('.', $_FILES['files']["name"]);
+        $extension = strtolower(end($extension));
+        $_FILES['files']["name"] = uniqid() . '.' . $extension;
+        $filename = $_FILES['files']["name"];
+        $tmpPath = $_FILES['files']["tmp_name"];
 
-        $imageFile = $file->getClientOriginalName();
-        $imageUploader->upload($uploadDir, $file, $imageFile);  
+		$s3 = new S3Client([
+			'region'  => 'ap-southeast-1',
+			'version' => 'latest',
+			'credentials' => [
+				'key'    => "AKIAW5SXAGDG4V23NG2E",
+				'secret' => "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",
+			]
+		]);		
+
+		$result = $s3->putObject([
+			'Bucket' => 'mitrahub',
+            'Key'    => basename($filename),
+            'SourceFile' => $tmpPath,
+            'ACL'        => 'public-read'		
+        ]);
+
+        $imgUrl = $result->get('ObjectURL');
+
         $upload = array(
-            array($imageFile)
+            array($imgUrl)
         );
         $uploadId = rand(100000, 1000000);
         $statusBatch = 1;
